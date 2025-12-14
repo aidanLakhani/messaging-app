@@ -1,0 +1,76 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  box-sizing: border-box;
+  padding: 30px;
+  font-family: Lato, "sans serif";
+  font-weight: 400;
+}
+
+.usernameBox {
+  position: fixed;
+  top: 20px;
+  right: 30px;
+  z-index: 1000;
+}
+
+input {
+  font-size: 16px;
+  padding: 8px 12px;
+  border: 1px solid;
+  border-radius: 4px;
+  outline: none;
+  border-color: #ccc;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  }
+
+  &::placeholder {
+    color: #6c757d;
+  }
+
+  &:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+  }
+}
+
+.btn_submit {
+  padding: 10px 8px;
+  border-radius: 5%;
+  border: 1px solid #ccc;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-title {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+.auth-page {
+}
