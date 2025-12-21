@@ -5,7 +5,7 @@ const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const socketIo = require("socket.io");
 
-const https = require("https");
+const http = require("http");
 const fs = require("fs");
 
 // Environment variables
@@ -17,13 +17,7 @@ app.use(cors());
 app.use(express.json());
 
 // Initialize server with websockets
-const server = https.createServer(
-  {
-    key: fs.readFileSync("key.pem"),
-    cert: fs.readFileSync("cert.pem"),
-  },
-  app
-);
+const server = http.createServer(app);
 
 const io = socketIo(server, {
   cors: {
