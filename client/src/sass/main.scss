@@ -34,16 +34,18 @@ body {
 input {
   font-size: 16px;
   padding: 8px 12px;
-  border: 1px solid;
-  border-radius: 4px;
+  border: none;
+  border-bottom: 1px solid;
+  border-radius: 0px;
   outline: none;
   border-color: #ccc;
-  transition: border-color 0.3s ease;
 
-  &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
-  }
+  margin: 0 10px;
+
+  // &:focus {
+  //   border-color: #007bff;
+  //   box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+  // }
 
   &::placeholder {
     color: #6c757d;
@@ -57,7 +59,7 @@ input {
 
 .btn_submit {
   padding: 10px 8px;
-  border-radius: 5%;
+  border-radius: 10%;
   border: 1px solid #ccc;
 }
 

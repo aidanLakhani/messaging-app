@@ -7,10 +7,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        target: "http://localhost:5000", // Allow calls to the backend server
+        target: "https://localhost:5000", // Allow calls to the backend server
         changeOrigin: true, // Ensure the request appears to come from the frontend server
         rewrite: (path) => path.replace(/^\/api/, ""),
       },
+      host: "0.0.0.0",
     },
   },
 });

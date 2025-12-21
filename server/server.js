@@ -27,7 +27,8 @@ const server = https.createServer(
 
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173",
+    // origin: "http://localhost:5173",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
@@ -35,7 +36,7 @@ const io = socketIo(server, {
 // Login / Signup routes
 
 app.get("/", (req, res) => {
-  res.status(400).json({
+  res.status(200).json({
     message: "hi",
   });
 });
@@ -67,7 +68,6 @@ io.on("connection", (socket) => {
     console.log("User disconnected");
   });
   socket.on("send_message", (data) => {
-    console.log(data);
     io.emit("message", data);
   });
 });

@@ -25,12 +25,11 @@ function Login({ setLoggedIn, loginType }) {
       <div className="form-wrapper">
         <form onSubmit={handleSubmit}>
           <label>
-            <p>Username</p>
-            <input type="text" ref={usernameRef} />
+            <input type="text" placeholder="username" ref={usernameRef} />
           </label>
+          <br />
           <label>
-            <p>Password</p>
-            <input type="password" ref={passwordRef} />
+            <input type="password" placeholder="password" ref={passwordRef} />
           </label>
           <div>
             <button type="submit">Submit</button>

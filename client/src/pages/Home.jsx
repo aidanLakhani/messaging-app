@@ -22,9 +22,9 @@ function Home() {
     function onRecieve(message) {
       console.log("message received");
       console.log(message);
-      // Check if message is duplicated (check only last 10 for efficiency)
+      // Check if own message (check last 5 to account for latency)
       setMessages((x) => {
-        for (let i = 0; i < x.length; i++) {
+        for (let i = 0; i < Math.min(5, x.length); i++) {
           if (message.id == x[i].id) {
             console.log("duplicate");
             console.log(x[i]);
@@ -32,7 +32,7 @@ function Home() {
           }
         }
 
-        return [...x, { message: message.message, id: message.id }];
+        return [{ message: message.message, id: message.id }, ...x];
       });
     }
 
@@ -51,13 +51,13 @@ function Home() {
   async function handleSubmit(e) {
     // Create own instance of message and ignore new ones with matching id
     // Can limit to last 50 messages, we will have rate limiting enabled anyway
+    // Reset input box
     let message = inputBox.current.value;
+    inputBox.current.value = "";
     if (message.trim().length > 0) {
-      // Reset input box
-      inputBox.current.value = "";
       // Create own instance of message
       var id = uuidv4();
-      setMessages((x) => [...x, { message: message, id: id }]);
+      setMessages((x) => [{ message: message, id: id }, ...x]);
       // Send message
       sendMessage({ message: message, id: id });
     }
@@ -72,7 +72,13 @@ function Home() {
       <h1>Messaging App</h1>
       <br></br>
       <div>
-        <input placeholder="Enter your message" ref={inputBox} />
+        <input
+          placeholder="Enter your message"
+          ref={inputBox}
+          onKeyDown={(e) => {
+            if (e.key == "Enter") handleSubmit(e);
+          }}
+        />
         <button onClick={handleSubmit} className="btn_submit">
           Submit
         </button>
