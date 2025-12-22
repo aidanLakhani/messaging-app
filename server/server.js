@@ -1,7 +1,6 @@
 // Import dependencies
 const express = require("express");
 const cors = require("cors");
-const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 const socketIo = require("socket.io");
 
@@ -9,7 +8,10 @@ const http = require("http");
 const fs = require("fs");
 
 // Environment variables
-dotenv.config({ path: "./config.env" });
+if (process.env.NODE_ENV !== "production") {
+  const dotenv = require("dotenv");
+  dotenv.config({ path: "./config.env" });
+}
 
 // Initialize Express
 const app = express();
@@ -23,7 +25,9 @@ const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173",
     origin:
-      process.env.NODE_ENV == "production" ? "https://messaging-app-client-gj3y.onrender.com" : "*",
+      process.env.NODE_ENV == "production"
+        ? "https://messaging-app-client-gj3y.onrender.com"
+        : "*",
     methods: ["GET", "POST"],
   },
 });
@@ -77,7 +81,9 @@ function signToken(username) {
 function sendToken(username, res) {
   const token = signToken(username);
   const cookieOptions = {
-    expires: new Date(Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000),
+    expires: new Date(
+      Date.now() + process.env.JWT_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    ),
     httpOnly: true,
   };
   if (process.env.NODE_ENV == "production") cookieOptions.secure = true;
