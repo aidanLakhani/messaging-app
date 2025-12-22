@@ -22,7 +22,8 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173",
-    origin: "*",
+    origin:
+      process.env.NODE_ENV == "production" ? "https://messaging-app-client-gj3y.onrender.com" : "*",
     methods: ["GET", "POST"],
   },
 });
@@ -92,7 +93,7 @@ function sendToken(username, res) {
 }
 
 // Start server
-const PORT = process.env.SERVER_PORT || 5000;
+const PORT = 5000;
 server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
