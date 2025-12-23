@@ -21,12 +21,13 @@ app.use(express.json());
 // Initialize server with websockets
 const server = http.createServer(app);
 
+const origins = process.env.CLIENT_URLS.split(",")
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173",
     origin:
       process.env.NODE_ENV == "production"
-        ? "https://messaging-app-client-gj3y.onrender.com"
+        ? origins
         : "*",
     methods: ["GET", "POST"],
   },
