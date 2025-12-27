@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { socket } from "../utils/socket";
 import { v4 as uuidv4 } from "uuid";
+import LoadingPage from "./LoadingPage";
 
 function Home() {
   const [messages, setMessages] = useState([]);
@@ -8,7 +9,9 @@ function Home() {
   const inputBox = useRef(null);
 
   useEffect(() => {
-    socket.connect();
+    setTimeout(() => {
+      socket.connect();
+    }, 500);
     function onConnect() {
       setIsConnected(true);
       console.log("connected");
@@ -67,6 +70,10 @@ function Home() {
     return socket.emit("send_message", message);
   }
 
+  if (!isConnected) {
+    return <LoadingPage message="Connecting to server..." />;
+  }
+
   return (
     <div>
       <h1>Messaging App</h1>
@@ -75,11 +82,16 @@ function Home() {
         <input
           placeholder="Enter your message"
           ref={inputBox}
+          disabled={!isConnected}
           onKeyDown={(e) => {
             if (e.key == "Enter") handleSubmit(e);
           }}
         />
-        <button onClick={handleSubmit} className="btn_submit">
+        <button
+          onClick={handleSubmit}
+          disabled={!isConnected}
+          className="btn_submit"
+        >
           Submit
         </button>
       </div>

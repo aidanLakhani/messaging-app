@@ -3,32 +3,34 @@ const express = require("express");
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const socketIo = require("socket.io");
-
 const http = require("http");
 const fs = require("fs");
+const chalk = require("chalk");
 
 // Environment variables
 if (process.env.NODE_ENV !== "production") {
   const dotenv = require("dotenv");
   dotenv.config({ path: "./config.env" });
+} else {
+  var origins = process.env.CLIENT_URLS.split(",");
 }
-
 // Initialize Express
 const app = express();
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.NODE_ENV == "production" ? origins : true,
+    credentials: true,
+  }),
+);
 app.use(express.json());
 
 // Initialize server with websockets
 const server = http.createServer(app);
 
-const origins = process.env.CLIENT_URLS.split(",")
 const io = socketIo(server, {
   cors: {
     // origin: "http://localhost:5173",
-    origin:
-      process.env.NODE_ENV == "production"
-        ? origins
-        : "*",
+    origin: process.env.NODE_ENV == "production" ? origins : "*",
     methods: ["GET", "POST"],
   },
 });
@@ -61,11 +63,18 @@ app.post("/messages", (req, res) => {
   });
 });
 
+let usersConnected = 0;
 io.on("connection", (socket) => {
-  console.log("A user connected");
+  usersConnected++;
+  console.log(
+    chalk.green("User connected: ") + chalk.bold(usersConnected + " users"),
+  );
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    usersConnected--;
+    console.log(
+      chalk.red("User disconnected: ") + chalk.bold(usersConnected + " users"),
+    );
   });
   socket.on("send_message", (data) => {
     io.emit("message", data);

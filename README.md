@@ -35,4 +35,5 @@ VITE_API_URL (URL to the server)
 Server:
 ```
 NODE_ENV=production (ensures the server runs securely)
+CLIENT_URLS (allowed CORS origins)
 ```

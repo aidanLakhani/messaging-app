@@ -1,0 +1,35 @@
+// @use ./variables as *; to import variables
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px;
+  background: white;
+  color: #111;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 6px solid rgba(0, 0, 0, 0.12);
+  border-top-color: #0066ff;
+  animation: loading-page-spin 1s linear infinite;
+}
+
+.message {
+  font-size: 16px;
+  opacity: 0.9;
+}
+
+@keyframes loading-page-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
