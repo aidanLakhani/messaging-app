@@ -1,16 +1,5 @@
 :root {
-  font-synthesis: none;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-*,
-*::after,
-*::before {
-  margin: 0;
-  padding: 0;
-  box-sizing: inherit;
 }
 
 html {
@@ -19,18 +8,20 @@ html {
 
 body {
   box-sizing: border-box;
-  padding: 30px;
-  font-family: Lato, "sans serif";
+  padding: 10px;
+  font-family: "Forum";
   font-weight: 400;
 }
 
-.usernameBox {
-  position: fixed;
-  top: 20px;
-  right: 30px;
-  z-index: 1000;
-}
+.message {
+  color: hsl(0, 0%, 20%);
+  font-size: 22px;
 
+  .message__user {
+    font-weight: bold;
+    color: hsl(0, 0%, 0%);
+  }
+}
 input {
   font-size: 16px;
   padding: 8px 12px;
@@ -39,8 +30,6 @@ input {
   border-radius: 0px;
   outline: none;
   border-color: #ccc;
-
-  margin: 0 10px;
 
   // &:focus {
   //   border-color: #007bff;
@@ -72,7 +61,4 @@ input {
 .auth-title {
   text-align: center;
   padding-bottom: 10px;
-}
-
-.auth-page {
 }

@@ -1,12 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import { socket } from "../utils/socket";
 import { v4 as uuidv4 } from "uuid";
 import LoadingPage from "./LoadingPage";
+import { UserContext } from "../App";
 
 function Home() {
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const inputBox = useRef(null);
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -24,18 +26,18 @@ function Home() {
 
     function onRecieve(message) {
       console.log("message received");
-      console.log(message);
-      // Check if own message (check last 5 to account for latency)
-      setMessages((x) => {
-        for (let i = 0; i < Math.min(5, x.length); i++) {
-          if (message.id == x[i].id) {
-            console.log("duplicate");
-            console.log(x[i]);
-            return x;
+      // Check if message sent by self (check last 5 to account for latency)
+      setMessages((m) => {
+        for (let i = 0; i < Math.min(5, m.length); i++) {
+          if (message.id == m[i].id) {
+            return m;
           }
         }
 
-        return [{ message: message.message, id: message.id }, ...x];
+        return [
+          { message: message.message, user: message.user, id: message.id },
+          ...m,
+        ];
       });
     }
 
@@ -52,17 +54,12 @@ function Home() {
   }, []);
 
   async function handleSubmit(e) {
-    // Create own instance of message and ignore new ones with matching id
-    // Can limit to last 50 messages, we will have rate limiting enabled anyway
-    // Reset input box
     let message = inputBox.current.value;
     inputBox.current.value = "";
     if (message.trim().length > 0) {
-      // Create own instance of message
       var id = uuidv4();
-      setMessages((x) => [{ message: message, id: id }, ...x]);
-      // Send message
-      sendMessage({ message: message, id: id });
+      setMessages((x) => [{ message: message, user: user, id: id }, ...x]);
+      sendMessage({ message: message, user: user, id: id });
     }
   }
 
@@ -71,7 +68,9 @@ function Home() {
   }
 
   if (!isConnected) {
-    return <LoadingPage message="Connecting to server..." />;
+    return (
+      <LoadingPage message="Waiting for server to start (can take a minute)" />
+    );
   }
 
   return (
@@ -96,9 +95,11 @@ function Home() {
         </button>
       </div>
       <br />
-      <div>
-        {[...messages].map((x) => (
-          <div key={x.id}>{x.message}</div>
+      <div className="messages-container">
+        {[...messages].map((m) => (
+          <div key={m.id} className="message">
+            <span class="message__user">{m.user}:</span> {m.message}
+          </div>
         ))}
       </div>
     </div>

@@ -1,0 +1,30 @@
+.header {
+  font-size: 3rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.login-container .username-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid black;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+.login-container .submit-btn {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 5px;
+  box-sizing: border-box;
+  color: black;
+}
+
+.login-container .submit-btn:hover {
+  background-color: hsl(0, 0%, 10%);
+  color: white;
+}

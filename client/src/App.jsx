@@ -1,26 +1,32 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./sass/main.scss";
 import Home from "./pages/Home.jsx";
-import LoginForm from "./components/LoginForm.jsx";
-import Cookies from "js-cookie";
-import { useState } from "react";
-import AuthPage from "./pages/AuthPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import { createContext, useState } from "react";
 
+export const UserContext = createContext(null);
 function App() {
-  const [loggedIn, setLoggedIn] = useState(Cookies.get("loggedIn"));
+  const [user, setUser] = useState("");
   return (
     <div className="Wrapper">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/login"
-            element={
-              <LoginForm setLoggedIn={setLoggedIn} loginType={"login"} />
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <UserContext.Provider value={{ user, setUser }}>
+              {user ? <Home /> : <LoginPage />}
+            </UserContext.Provider>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <UserContext.Provider value={{ user, setUser }}>
+              <LoginPage />
+            </UserContext.Provider>
+          }
+        />
+      </Routes>
     </div>
   );
 }
