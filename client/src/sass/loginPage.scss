@@ -1,30 +1,56 @@
-.header {
+.login-header {
   font-size: 3rem;
   font-weight: bold;
   text-align: center;
   margin-bottom: 50px;
+  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.5);
 }
 
-.login-container .username-input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid black;
-  border-radius: 5px;
-  box-sizing: border-box;
-}
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-.login-container .submit-btn {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid black;
-  background-color: white;
-  border-radius: 5px;
-  box-sizing: border-box;
-  color: black;
-}
+  & .username-input {
+    width: 400px;
+    max-width: 90%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
 
-.login-container .submit-btn:hover {
-  background-color: hsl(0, 0%, 10%);
-  color: white;
+    box-shadow: 0px 3px 3px black;
+    border-radius: 5px;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  & .submit-btn {
+    width: 400px;
+    max-width: 90%;
+    padding: 10px;
+    border: none;
+    box-shadow: 0 8px 10px black;
+    background-color: white;
+    border-radius: 7px;
+    box-sizing: border-box;
+    color: black;
+    cursor: pointer;
+    transition:
+      background-color,
+      0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+
+    &:hover {
+      background-color: hsl(0, 0%, 10%);
+      color: hsl(0, 0%, 100%);
+      border: none;
+    }
+
+    &:active {
+      box-shadow: 0 0px 3px black;
+      margin-top: 8px;
+    }
+  }
 }

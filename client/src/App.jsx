@@ -1,14 +1,26 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import "./sass/main.scss";
 import Home from "./pages/Home.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
-import { createContext, useState } from "react";
+import { useState, useEffect } from "react";
+import Footer from "./components/Footer.jsx";
+import { UserContext } from "./UserContext.jsx";
 
-export const UserContext = createContext(null);
 function App() {
-  const [user, setUser] = useState("");
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : "";
+  });
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+      console.log("set user");
+    }
+  }, [user]);
+
   return (
-    <div className="Wrapper">
+    <div className="wrapper">
       <Routes>
         <Route
           path="/"
@@ -27,6 +39,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import { socket } from "../utils/socket";
 import { v4 as uuidv4 } from "uuid";
 import LoadingPage from "./LoadingPage";
-import { UserContext } from "../App";
+import { UserContext } from "../UserContext.jsx";
 
 function Home() {
   const [messages, setMessages] = useState([]);
@@ -11,9 +11,7 @@ function Home() {
   const { user } = useContext(UserContext);
 
   useEffect(() => {
-    setTimeout(() => {
-      socket.connect();
-    }, 500);
+    socket.connect();
     function onConnect() {
       setIsConnected(true);
       console.log("connected");
@@ -53,7 +51,7 @@ function Home() {
     };
   }, []);
 
-  async function handleSubmit(e) {
+  async function handleSubmit() {
     let message = inputBox.current.value;
     inputBox.current.value = "";
     if (message.trim().length > 0) {
@@ -69,36 +67,38 @@ function Home() {
 
   if (!isConnected) {
     return (
-      <LoadingPage message="Waiting for server to start (can take a minute)" />
+      <LoadingPage message="Waiting for server to start (can take a minute)"></LoadingPage>
     );
   }
 
   return (
-    <div>
-      <h1>Messaging App</h1>
+    <div className="app">
+      <h1 className="app-header">Messaging App</h1>
       <br></br>
-      <div>
+      <div className="message-container">
         <input
+          autoFocus
           placeholder="Enter your message"
+          className="message-container__input"
           ref={inputBox}
           disabled={!isConnected}
           onKeyDown={(e) => {
-            if (e.key == "Enter") handleSubmit(e);
+            if (e.key == "Enter") handleSubmit();
           }}
         />
         <button
           onClick={handleSubmit}
           disabled={!isConnected}
-          className="btn_submit"
+          className="message-container__button"
         >
           Submit
         </button>
       </div>
       <br />
-      <div className="messages-container">
+      <div className="messages">
         {[...messages].map((m) => (
-          <div key={m.id} className="message">
-            <span class="message__user">{m.user}:</span> {m.message}
+          <div key={m.id} className="messages__item">
+            <span className="messages__user">{m.user}:</span> {m.message}
           </div>
         ))}
       </div>
