@@ -8,7 +8,7 @@ function Home() {
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const inputBox = useRef(null);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   useEffect(() => {
     socket.connect();
@@ -23,7 +23,7 @@ function Home() {
     }
 
     function onRecieve(message) {
-      console.log("message received");
+      if (!import.meta.env.PROD) console.log("message received");
       // Check if message sent by self (check last 5 to account for latency)
       setMessages((m) => {
         for (let i = 0; i < Math.min(5, m.length); i++) {
@@ -61,6 +61,10 @@ function Home() {
     }
   }
 
+  function handleLogout() {
+    setUser("");
+  }
+
   function sendMessage(message) {
     return socket.emit("send_message", message);
   }
@@ -73,7 +77,12 @@ function Home() {
 
   return (
     <div className="app">
-      <h1 className="app-header">Messaging App</h1>
+      <div className="header-container">
+        <h1 className="header-container__title">Messaging App</h1>
+        <button className="header-container__logout" onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
       <br></br>
       <div className="message-container">
         <input
