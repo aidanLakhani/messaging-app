@@ -39,7 +39,7 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 24px;
 
   &__title {
     color: hsl(0, 0%, 12%);
@@ -78,6 +78,7 @@ body {
 .message-container {
   display: flex;
   width: max-content;
+  max-width: 100%;
   /* background-color: hsl(0, 0%, 75%); */
   background-image: linear-gradient(
     to bottom,
@@ -93,6 +94,7 @@ body {
     font-family: Poppins;
     font-weight: 300;
     padding: 8px 12px;
+    min-width: 0;
     border: none;
     border-radius: 5px;
     outline: none;

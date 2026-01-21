@@ -83,7 +83,6 @@ function Home() {
           Logout
         </button>
       </div>
-      <br></br>
       <div className="message-container">
         <input
           autoFocus
