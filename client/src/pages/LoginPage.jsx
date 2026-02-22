@@ -1,10 +1,8 @@
 import "../sass/loginPage.scss";
-import { useContext, useRef, useEffect } from "react";
-import { UserContext } from "../UserContext.jsx";
+import { useRef } from "react";
 
-function LoginPage() {
+function LoginPage({ setUser }) {
   const usernameRef = useRef(null);
-  const { setUser } = useContext(UserContext);
   function handleSubmit() {
     if (usernameRef.current.value.trim().length > 0) {
       setUser(usernameRef.current.value);

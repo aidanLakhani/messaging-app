@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== "production") {
 } else {
   var origins = process.env.CLIENT_URLS.split(",");
 }
+
 // Initialize Express
 const app = express();
 app.use(
@@ -110,6 +111,6 @@ function sendToken(username, res) {
 
 // Start server
 const PORT = 5000;
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`Server listening on port ${PORT}`);
 });

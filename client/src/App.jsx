@@ -4,7 +4,6 @@ import Home from "./pages/Home.jsx";
 import LoginPage from "./pages/LoginPage.jsx";
 import { useState, useEffect } from "react";
 import Footer from "./components/Footer.jsx";
-import { UserContext } from "./UserContext.jsx";
 
 function App() {
   const [user, setUser] = useState(() => {
@@ -13,10 +12,8 @@ function App() {
   });
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-      console.log("set user");
-    }
+    localStorage.setItem("user", JSON.stringify(user));
+    console.log("set user");
   }, [user]);
 
   return (
@@ -25,19 +22,14 @@ function App() {
         <Route
           path="/"
           element={
-            <UserContext.Provider value={{ user, setUser }}>
-              {user ? <Home /> : <LoginPage />}
-            </UserContext.Provider>
+            user ? (
+              <Home user={user} setUser={setUser} />
+            ) : (
+              <LoginPage setUser={setUser} />
+            )
           }
         />
-        <Route
-          path="/login"
-          element={
-            <UserContext.Provider value={{ user, setUser }}>
-              <LoginPage />
-            </UserContext.Provider>
-          }
-        />
+        <Route path="/login" element={<LoginPage setUser={setUser} />} />
       </Routes>
       <Footer />
     </div>

@@ -1,14 +1,13 @@
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef } from "react";
 import { socket } from "../utils/socket";
 import { v4 as uuidv4 } from "uuid";
 import LoadingPage from "./LoadingPage";
-import { UserContext } from "../UserContext.jsx";
 
-function Home() {
+function Home({ user, setUser }) {
   const [messages, setMessages] = useState([]);
   const [isConnected, setIsConnected] = useState(socket.connected);
   const inputBox = useRef(null);
-  const { user, setUser } = useContext(UserContext);
+  const colorRef = useRef(null);
 
   useEffect(() => {
     socket.connect();
@@ -33,7 +32,12 @@ function Home() {
         }
 
         return [
-          { message: message.message, user: message.user, id: message.id },
+          {
+            message: message.message,
+            user: message.user,
+            color: message.color,
+            id: message.id,
+          },
           ...m,
         ];
       });
@@ -56,8 +60,21 @@ function Home() {
     inputBox.current.value = "";
     if (message.trim().length > 0) {
       var id = uuidv4();
-      setMessages((x) => [{ message: message, user: user, id: id }, ...x]);
-      sendMessage({ message: message, user: user, id: id });
+      setMessages((x) => [
+        {
+          message: message,
+          user: user,
+          color: colorRef.current.value,
+          id: id,
+        },
+        ...x,
+      ]);
+      sendMessage({
+        message: message,
+        user: user,
+        color: colorRef.current.value,
+        id: id,
+      });
     }
   }
 
@@ -83,32 +100,53 @@ function Home() {
           Logout
         </button>
       </div>
-      <div className="message-container">
-        <input
-          autoFocus
-          placeholder="Enter your message"
-          className="message-container__input"
-          ref={inputBox}
-          disabled={!isConnected}
-          onKeyDown={(e) => {
-            if (e.key == "Enter") handleSubmit();
-          }}
-        />
-        <button
-          onClick={handleSubmit}
-          disabled={!isConnected}
-          className="message-container__button"
-        >
-          Submit
-        </button>
-      </div>
-      <br />
-      <div className="messages">
-        {[...messages].map((m) => (
-          <div key={m.id} className="messages__item">
-            <span className="messages__user">{m.user}:</span> {m.message}
+      <div className="main-content">
+        <div className="chat-container">
+          <div className="message-container">
+            <input
+              autoFocus
+              placeholder="Enter your message"
+              className="message-container__input"
+              ref={inputBox}
+              disabled={!isConnected}
+              onKeyDown={(e) => {
+                if (e.key == "Enter") handleSubmit();
+              }}
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!isConnected}
+              className="message-container__button"
+            >
+              Submit
+            </button>
+            <input
+              type="color"
+              className="message-container__color"
+              ref={colorRef}
+              defaultValue="#333333"
+            />
           </div>
-        ))}
+          <div className="messages">
+            {[...messages].map((m) => (
+              <div
+                key={m.id}
+                className="messages__item"
+                style={{ color: m.color }}
+              >
+                <span className="messages__user">{m.user}:</span> {m.message}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="chats">
+          <ul className="chats__list">
+            <li className="chats__item">
+              <span className="chats__item-name">User</span>
+              <span className="chats__item-unread"></span>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
