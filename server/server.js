@@ -64,18 +64,23 @@ app.post("/messages", (req, res) => {
   });
 });
 
-let usersConnected = 0;
+let users = new Set();
 io.on("connection", (socket) => {
-  usersConnected++;
+  let currentUser = socket.handshake.auth.user;
+  users.add(currentUser);
+  io.emit("user_change", Array.from(users));
   console.log(
-    chalk.green("User connected: ") + chalk.bold(usersConnected + " users"),
+    chalk.green(currentUser + " connected: ") +
+      chalk.bold(users.size + " users"),
   );
 
   socket.on("disconnect", () => {
-    usersConnected--;
     console.log(
-      chalk.red("User disconnected: ") + chalk.bold(usersConnected + " users"),
+      chalk.red(currentUser + " disconnected: ") +
+        chalk.bold(users.size + " users"),
     );
+    users.delete(currentUser);
+    io.emit("user_change", Array.from(users));
   });
   socket.on("send_message", (data) => {
     io.emit("message", data);
@@ -111,6 +116,6 @@ function sendToken(username, res) {
 
 // Start server
 const PORT = 5000;
-server.listen(PORT, "0.0.0.0", () => {
+server.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });

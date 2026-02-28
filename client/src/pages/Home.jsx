@@ -1,16 +1,19 @@
 import { useEffect, useState, useRef } from "react";
-import { socket } from "../utils/socket";
+import io from "../utils/socket";
 import { v4 as uuidv4 } from "uuid";
 import LoadingPage from "./LoadingPage";
 
 function Home({ user, setUser }) {
   const [messages, setMessages] = useState([]);
-  const [isConnected, setIsConnected] = useState(socket.connected);
+  const [isConnected, setIsConnected] = useState(false);
+  const [users, setUsers] = useState([]);
   const inputBox = useRef(null);
   const colorRef = useRef(null);
+  const socket = useRef(io(user));
 
   useEffect(() => {
-    socket.connect();
+    const curSock = socket.current;
+    curSock.connect();
     function onConnect() {
       setIsConnected(true);
       console.log("connected");
@@ -43,15 +46,21 @@ function Home({ user, setUser }) {
       });
     }
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("message", onRecieve);
+    function onUserChange(newusers) {
+      setUsers(newusers);
+    }
+
+    curSock.on("connect", onConnect);
+    curSock.on("disconnect", onDisconnect);
+    curSock.on("message", onRecieve);
+    curSock.on("user_change", onUserChange);
 
     return () => {
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("message", onRecieve);
-      socket.disconnect();
+      curSock.off("connect", onConnect);
+      curSock.off("disconnect", onDisconnect);
+      curSock.off("message", onRecieve);
+      curSock.off("user_change", onUserChange);
+      curSock.disconnect();
     };
   }, []);
 
@@ -83,7 +92,7 @@ function Home({ user, setUser }) {
   }
 
   function sendMessage(message) {
-    return socket.emit("send_message", message);
+    return socket.current.emit("send_message", message);
   }
 
   if (!isConnected) {
@@ -128,7 +137,7 @@ function Home({ user, setUser }) {
             />
           </div>
           <div className="messages">
-            {[...messages].map((m) => (
+            {messages.map((m) => (
               <div
                 key={m.id}
                 className="messages__item"
@@ -141,10 +150,15 @@ function Home({ user, setUser }) {
         </div>
         <div className="chats">
           <ul className="chats__list">
-            <li className="chats__item">
-              <span className="chats__item-name">User</span>
-              <span className="chats__item-unread"></span>
-            </li>
+            {users.map((u) =>
+              u.replace(/"/g, "") != user ? (
+                <li className="chats__item">
+                  <span className="chats__item-name">
+                    {u.replace(/"/g, "")}
+                  </span>
+                </li>
+              ) : null,
+            )}
           </ul>
         </div>
       </div>
